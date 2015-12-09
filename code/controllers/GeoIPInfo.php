@@ -24,14 +24,14 @@ class GeoIPInfo extends Controller
                 'IP' => $ip
             ))->first();
         if ($ipCache && $ipCache->exists()) {
-	    if (strtotime($ipCache->LastEdited) < strtotime('24 hours ago')) {
+	        if (strtotime($ipCache->LastEdited) < strtotime('24 hours ago')) {
                 $ipCache->clearIPCache();
-	    }
+	        }
             $details = $ipCache->getDetails();
         } else {
             $details = IPInfoCache::setupCache($ip);
         }
 
-        return json_encode($details);
+        return $details;
     }
 }

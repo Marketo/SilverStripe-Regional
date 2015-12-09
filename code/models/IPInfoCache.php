@@ -50,11 +50,13 @@ class IPInfoCache extends DataObject
         $reader = new Reader('/usr/share/GeoIP/GeoLite2-City.mmdb');
         $record = $reader->city($ip);
 
+        $countryCode = null;
         try {
             $result['location']['continent_code'] = $record->continent->code;
             $result['location']['continent_name'] = $record->continent->name;
 
-            $result['location']['country_code'] = $record->country->isoCode;
+            $countryCode = $record->country->isoCode;
+            $result['location']['country_code'] = $countryCode;
             $result['location']['country_name'] = $record->country->name;
 
             $result['location']['postal_code'] = $record->postal->code;
@@ -67,18 +69,46 @@ class IPInfoCache extends DataObject
             $status = self::setStatus('GEOIP_EXCEPTION', $e, $status);
         }
 
-        $status = self::setStatus('SUCCESS', null, $status);
-        $request['status']['code'] = $status;
-        $request['status']['message'] = IPInfoCache::getStatuses($status);
-        $json =  json_encode(array(
-            'request' => $request,
-            'status' => $status,
-            'result' => $result
-        ));
-        $cache = IPInfoCache::create();
-        $cache->IP = $ip;
-        $cache->Info = json_encode($json);
-        $cache->write();
+        $geoRegion = null;
+        if ($countryCode) {
+            $geoRegion = GeoRegion::get()
+                ->filter('RegionCode', $countryCode)
+                ->first();
+            if ($geoRegion && $geoRegion->exists()) {
+                $result['location']['marketo_region_name'] = $geoRegion->Name;
+                $result['location']['marketo_region_code'] = $geoRegion->RegionCode;
+                $result['location']['marketo_region_time_zone'] = $geoRegion->TimeZone;
+            }
+        }
+
+        if ($status) {
+            // do not cache a failure
+            return json_encode(array(
+                'request' => $request,
+                'status' => $status,
+                'result' => $result
+            ));
+        } else {
+            // return cached success message
+            $status = self::setStatus('SUCCESS_CACHED', null, $status);
+            $json =  json_encode(array(
+                'request' => $request,
+                'status' => $status,
+                'result' => $result
+            ));
+
+            // write a standard success to the cache
+            $dbStatus = self::setStatus('SUCCESS', null, null);
+            $dbJson =  json_encode(array(
+                'request' => $request,
+                'status' => $dbStatus,
+                'result' => $result
+            ));
+            $cache = IPInfoCache::create();
+            $cache->IP = $ip;
+            $cache->Info = $dbJson;
+            $cache->write();
+        }
 
         return $json;
     }
@@ -100,7 +130,7 @@ class IPInfoCache extends DataObject
     }
 
     public function getDetails() {
-        return json_decode($this->Info, true);
+        return $this->Info;
     }
 
     public function clearIPCache() {
