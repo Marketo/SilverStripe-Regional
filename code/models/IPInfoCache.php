@@ -125,10 +125,6 @@ class IPInfoCache extends DataObject
         return $code;
     }
 
-    public function getStatus() {
-        if (!class_exists('Net_GeoIP')) return 501;
-    }
-
     public function getDetails() {
         return $this->Info;
     }
