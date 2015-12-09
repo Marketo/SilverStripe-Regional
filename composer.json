@@ -1,0 +1,27 @@
+
+{
+    "name": "marketo/silverstripe-regional",
+    "description": "Using modern GeoIP lookup mechanisms, this SilverStripe module makes available the coordinates, postal code, city, state, country, content, timezone, organization, and ISP to the SilverStripe instance and can open a frontend API for static websites to take advantage of. It can be extended with GeoIP drivers to provide additional or custom contextual data.",
+
+    "type": "silverstripe-module",
+
+    "require": {
+        "silverstripe/cms": "3.*",
+        "composer/installers": "*"
+    },
+
+    "license": "BSD-3-Clause",
+
+    "authors": [
+        {
+            "name": "Kirk Mayo",
+            "email": "kirk.mayo@solnet.co.nz"
+        },
+        {
+            "name": "Nathan J. Brauer",
+            "email": "nathan@marketera.com"
+        }
+    ],
+
+    "minimum-stability": "dev"
+}
