@@ -24,11 +24,19 @@ for static websites to take advantage of. It can be extended with GeoIP drivers 
 
 The current module uses a default path for the GeoIP database this is currently set to `/usr/share/GeoIP/GeoLite2-City.mmdb`
 This can be changed via the yml config a example is below.
+A model admin exists called GeoRegion which adds user defined fields to the result that is returned.
+It retrieves the details to add via the country code which needs to match a country code in GeoRegion.
 
-``
+```
 IPInfoCache:
   GeoPath: '/your/own/location/yourdb.mmdb'
 ```
+
+## GeoIP database
+
+You will neeed to retrive a databse for the module to work with this will need to be stored
+on the server and you may need to set the location of GeoPath under IPInfoCache in your config yml file.
+The free databases can be downloaded from here <https://github.com/maxmind/GeoIP2-php>
 
 ## API endpoints
 
