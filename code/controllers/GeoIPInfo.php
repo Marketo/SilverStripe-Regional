@@ -19,6 +19,12 @@ class GeoIPInfo extends Controller
     public function geoip() {
         $ip = $this->getRequest()->param('IP');
 
+        if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+            $status = IPInfoCache::setStatus('IP_ADDRESS_INVALID', null);
+            return json_encode(array(
+                'status' => $status
+            ));
+        }
         $ipCache = IPInfoCache::get()
             ->filter(array(
                 'IP' => $ip

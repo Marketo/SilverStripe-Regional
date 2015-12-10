@@ -26,7 +26,7 @@ class IPInfoCache extends DataObject
         'DOMAIN_REGISTRATION_REQUIRED' => 'The domain of your site is not registered.',
         'DOMAIN_REGISTRATION_REQUIRED' => 'The domain of your site is not registered.',
         'GEOIP_EXCEPTION' => 'GEOIP_EXCEPTION [ERROR]',
-        'GEOIP_MISSING' => 'GeoIP module does not exist',
+        'GEOIP_MISSING' => 'GeoIP module does not exist'
     );
 
     public static $privateAddresses = array(
@@ -50,7 +50,7 @@ class IPInfoCache extends DataObject
         $path = Config::inst()->get('IPInfoCache', 'GeoPath');
         if (!$path) $path = $this->defaultPath;
         if (!file_exists($path)) {
-            user_error('Error load Geo database', E_USER_ERROR);
+            user_error('Error loading Geo database', E_USER_ERROR);
         }
 
         $request['ip'] = $ip;
