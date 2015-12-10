@@ -7,8 +7,7 @@
 
     "require": {
         "silverstripe/cms": "3.*",
-        "composer/installers": "*",
-        "geoip2/geoip2": "~2.0"
+        "composer/installers": "*"
     },
 
     "license": "BSD-3-Clause",
