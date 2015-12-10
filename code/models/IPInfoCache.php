@@ -20,10 +20,13 @@ class IPInfoCache extends DataObject
         $ipService = new $driver();
         $dbJson = $ipService->processIP($ip);
 
-        $cache = IPInfoCache::create();
-        $cache->IP = $ip;
-        $cache->Info = $dbJson;
-        $cache->write();
+        // do not cache a empty object
+        if ($dbJson) {
+            $cache = IPInfoCache::create();
+            $cache->IP = $ip;
+            $cache->Info = $dbJson;
+            $cache->write();
+        }
 
         return $ipService->getJSON();
     }
