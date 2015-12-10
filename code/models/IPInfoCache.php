@@ -29,6 +29,14 @@ class IPInfoCache extends DataObject
         'GEOIP_MISSING' => 'GeoIP module does not exist',
     );
 
+    public static $privateAddresses = array(
+        '10.0.0.0|10.255.255.255',
+        '172.16.0.0|172.31.255.255',
+        '192.168.0.0|192.168.255.255',
+        '169.254.0.0|169.254.255.255',
+        '127.0.0.0|127.255.255.255'
+    );
+
     public static function getStatuses($code = null) {
         if ($code && isset(self::$statuses[$code])) {
             return self::$statuses[$code];
@@ -47,6 +55,15 @@ class IPInfoCache extends DataObject
 
         $request['ip'] = $ip;
         $request['type'] = IPInfoCache::ipVersion($ip);
+        if ($request['type'] == 'IPv4') {
+            $isPrivate = IPInfoCache::isPrivateIP($ip);
+            if ($isPrivate) {
+                $status = self::setStatus('IP_ADDRESS_RESERVED', null, $status);
+                return json_encode(array(
+                    'status' => $status
+                ));
+            }
+        }
         $reader = new Reader('/usr/share/GeoIP/GeoLite2-City.mmdb');
         $record = $reader->city($ip);
 
@@ -135,5 +152,16 @@ class IPInfoCache extends DataObject
 
     public static function ipVersion($ip = null) {
         return (strpos($ip, ':') === false) ? 'IPv4' : 'IPv6';
+    }
+
+    public static function isPrivateIP($ip) {
+        $longIP = ip2long($ip);
+        if ($longIP != -1) {
+            foreach (IPInfoCache::$privateAddresses as $privateAddress) {
+                list($start, $end) = explode('|', $privateAddress);
+                if ($longIP >= ip2long($start) && $longIP <= ip2long($end)) return (true);
+            }
+        }
+        return false;
     }
 }
