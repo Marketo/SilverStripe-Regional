@@ -42,6 +42,13 @@ IPInfoCache:
   GeoPathCity: '/usr/share/GeoIP/GeoIPCity.dat'
 ```
 
+Another way to set the jsonp function is directly by using the get variable fn this will override anything
+set by the yml config file as per the following example url.
+
+```
+http://marketo.local/geoip/5.71.14.28.jsonp?fn=MarketoLoad
+```
+
 ## GeoIP database
 
 You will neeed to retrive a databse for the module to work with this will need to be stored
