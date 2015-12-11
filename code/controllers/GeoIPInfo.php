@@ -40,6 +40,7 @@ class GeoIPInfo extends Controller
                 return "$fn(" . $details . ');';
             }
         }
+	$this->response->addHeader('Content-Type', 'application/json');
         return $details;
     }
 }
