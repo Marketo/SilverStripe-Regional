@@ -18,6 +18,7 @@ class GeoIPInfo extends Controller
 
     public function geoip() {
         $ip = $this->getRequest()->param('IP');
+        $requestType = $this->getRequest()->getExtension();
 
         $ipCache = IPInfoCache::get()
             ->filter(array(
@@ -32,6 +33,12 @@ class GeoIPInfo extends Controller
             $details = IPInfoCache::setupCache($ip);
         }
 
+        if ($requestType == 'jsonp') {
+            $jsonp = Config::inst()->get('IPInfoCache', 'jsonp');
+            if ($jsonp) {
+                return "$jsonp(" . $details . ');';
+            }
+        }
         return $details;
     }
 }

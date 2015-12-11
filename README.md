@@ -7,7 +7,7 @@ Kirk Mayo
 ## Requirements
 
 * SilverStripe 3.2
-* geoip2/geoip2 2.0
+* A driver to return the json/jsonp results
 
 # SilverStripe-Regional
 
@@ -32,6 +32,16 @@ IPInfoCache:
   GeoPath: '/your/own/location/yourdb.mmdb'
 ```
 
+You can also return the results as json by setting up a variable in the yml config under IPInfoCache
+as per the example below, which also details how to specify the driver to use.
+
+```
+IPInfoCache:
+  Driver: 'MarketoRegionalDriver'
+  jsonp: 'yourOwnJsonpFunction';
+  GeoPathCity: '/usr/share/GeoIP/GeoIPCity.dat'
+```
+
 ## GeoIP database
 
 You will neeed to retrive a databse for the module to work with this will need to be stored
@@ -40,10 +50,14 @@ The free databases can be downloaded from here <https://github.com/maxmind/GeoIP
 
 ## API endpoints
 
-The curent endpoint returns a JSON object giving location details for the IP address
+The curent endpoint returns a JSON object giving location details for the IP address.
+The results default to json but they can also be returned as jsonp if this has been defined under
+the config for IPInfoCache
 
 ```
 http://YOURSITE/geoip/IPADDRESS
+http://YOURSITE/geoip/IPADDRESS.json
+http://YOURSITE/geoip/IPADDRESS.jsonp
 ```
 
 ## TODO
