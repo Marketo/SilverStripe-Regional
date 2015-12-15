@@ -38,7 +38,7 @@ as per the example below, which also details how to specify the driver to use.
 ```
 IPInfoCache:
   Driver: 'MarketoRegionalDriver'
-  CORS: true
+  CORS: false
   jsonp: 'yourOwnJsonpFunction';
   GeoPathCity: '/usr/share/GeoIP/GeoIPCity.dat'
 ```
@@ -50,9 +50,37 @@ set by the yml config file as per the following example url.
 http://marketo.local/geoip/5.71.14.28.jsonp?fn=MarketoLoad
 ```
 
+## Accepting third party AJAX requests
+
 If you want to allow third party javascript requests to query the service (like AJAX) you will need to set
 the CORS flag in your yml config to true so that the `Access-Control-Allow-Origin` header gets sent back to
-the requesting browser.
+the requesting browser as per the example below.
+
+```
+IPInfoCache:
+  Driver: 'MarketoRegionalDriver'
+  CORS: true
+  jsonp: 'yourOwnJsonpFunction';
+  GeoPathCity: '/usr/share/GeoIP/GeoIPCity.dat'
+```
+
+Querying the API from a third party can be done with jQuery or AJAX.
+A simple synchronous javascript example is below where you can 
+just call the function requestInfo with the host and the request.
+
+
+``` javascript
+function requestInfo(host, request) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", host + request, false);
+    xhr.send();
+
+    return xhr.response;
+}
+
+// call with the following
+// var result = requestInfo('http://192.168.0.1/', 'geoip/50.206.151.39.json');
+```
 
 ## GeoIP database
 
