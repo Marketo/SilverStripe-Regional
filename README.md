@@ -38,6 +38,7 @@ as per the example below, which also details how to specify the driver to use.
 ```
 IPInfoCache:
   Driver: 'MarketoRegionalDriver'
+  CORS: true
   jsonp: 'yourOwnJsonpFunction';
   GeoPathCity: '/usr/share/GeoIP/GeoIPCity.dat'
 ```
@@ -48,6 +49,10 @@ set by the yml config file as per the following example url.
 ```
 http://marketo.local/geoip/5.71.14.28.jsonp?fn=MarketoLoad
 ```
+
+If you want to allow third party javascript requests to query the service (like AJAX) you will need to set
+the CORS flag in your yml config to true so that the `Access-Control-Allow-Origin` header gets sent back to
+the requesting browser.
 
 ## GeoIP database
 

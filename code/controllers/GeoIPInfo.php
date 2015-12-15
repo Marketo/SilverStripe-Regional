@@ -34,13 +34,17 @@ class GeoIPInfo extends Controller
             $details = IPInfoCache::setupCache($ip);
         }
 
+	    $this->response->addHeader('Content-Type', 'application/json');
+        $cors = Config::inst()->get('IPInfoCache', 'CORS');
+        if ($cors) {
+	        $this->response->addHeader('Access-Control-Allow-Origin', '*');
+        }
         if ($requestType == 'jsonp') {
             $fn = (isset($fn)) ? $fn : Config::inst()->get('IPInfoCache', 'jsonp');
             if ($fn) {
                 return "$fn(" . $details . ');';
             }
         }
-	$this->response->addHeader('Content-Type', 'application/json');
         return $details;
     }
 }
