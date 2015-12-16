@@ -5,10 +5,12 @@
  *
  * A cache of geo data for a IP address
  */
-use GeoIp2\Database\Reader;
 
 class IPInfoCache extends DataObject
 {
+    public static $defaultDrivers = array(
+        'GeoIPLegacyDriver'
+    );
     private static $db = array(
         'IP' => 'Varchar',
         'Info' => 'Text'
@@ -16,6 +18,17 @@ class IPInfoCache extends DataObject
 
     public static function setupCache($ip) {
         $driver = Config::inst()->get('IPInfoCache', 'Driver');
+        if (!$driver) {
+            foreach (self::$defaultDrivers as $defaultDriver) {
+                if (class_exists($defaultDriver)) {
+                    $driver = $defaultDriver;
+                    break;
+                }
+            }
+            if (!$driver) {
+                user_error('A driver needs to be specified');
+            }
+        }
 
         $ipService = new $driver();
         $dbJson = $ipService->processIP($ip);
