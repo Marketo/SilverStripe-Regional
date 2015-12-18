@@ -18,7 +18,7 @@ class GeoIPInfo extends Controller
 
     public function geoip() {
         $ip = $this->getRequest()->param('IP');
-        $fn = $this->getRequest()->getVar('fn');
+        $fn = $this->getRequest()->getVar('callback');
         $requestType = $this->getRequest()->getExtension();
 
         $ipCache = IPInfoCache::get()
