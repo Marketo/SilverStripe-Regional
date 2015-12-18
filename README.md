@@ -82,6 +82,31 @@ function requestInfo(host, request) {
 // var result = requestInfo('http://192.168.0.1/', 'geoip/50.206.151.39.json');
 ```
 
+You can also try the following asynchronous example below
+
+``` javascript
+function asyncRequestInfo(host, request) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", host + request, true);
+    xhr.onload = function (e) {
+    if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+            return xhr.responseText;
+        } else {
+            console.error(xhr.statusText);
+        }
+    }
+    };
+    xhr.onerror = function (e) {
+        console.error(xhr.statusText);
+    };
+    xhr.send(null);
+}
+
+// call with the following
+// var result = asyncRequestInfo('http://192.168.0.1/', 'geoip/50.206.151.39.json');
+```
+
 ## GeoIP database
 
 You will neeed to retrive a databse for the module to work with this will need to be stored
