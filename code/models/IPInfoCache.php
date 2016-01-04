@@ -16,7 +16,8 @@ class IPInfoCache extends DataObject
         'Info' => 'Text'
     );
 
-    public static function setupCache($ip) {
+    public static function setupCache($ip)
+    {
         $driver = Config::inst()->get('IPInfoCache', 'Driver');
         if (!$driver) {
             foreach (self::$defaultDrivers as $defaultDriver) {
@@ -45,11 +46,13 @@ class IPInfoCache extends DataObject
     }
 
 
-    public function getDetails() {
+    public function getDetails()
+    {
         return $this->Info;
     }
 
-    public function clearIPCache() {
+    public function clearIPCache()
+    {
         $this->write(false, false, true);
     }
 }

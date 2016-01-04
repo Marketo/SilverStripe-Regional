@@ -16,7 +16,8 @@ class GeoIPInfo extends Controller
         '$IP' => 'geoip'
     );
 
-    public function geoip() {
+    public function geoip()
+    {
         $ip = $this->getRequest()->param('IP');
         $fn = $this->getRequest()->getVar('callback');
         $requestType = $this->getRequest()->getExtension();
@@ -26,18 +27,18 @@ class GeoIPInfo extends Controller
                 'IP' => $ip
             ))->first();
         if ($ipCache && $ipCache->exists()) {
-	        if (strtotime($ipCache->LastEdited) < strtotime('24 hours ago')) {
+            if (strtotime($ipCache->LastEdited) < strtotime('24 hours ago')) {
                 $ipCache->clearIPCache();
-	        }
+            }
             $details = $ipCache->getDetails();
         } else {
             $details = IPInfoCache::setupCache($ip);
         }
 
-	    $this->response->addHeader('Content-Type', 'application/json');
+        $this->response->addHeader('Content-Type', 'application/json');
         $cors = Config::inst()->get('IPInfoCache', 'CORS');
         if ($cors) {
-	        $this->response->addHeader('Access-Control-Allow-Origin', '*');
+            $this->response->addHeader('Access-Control-Allow-Origin', '*');
         }
         if ($requestType == 'jsonp') {
             $fn = (isset($fn)) ? $fn : Config::inst()->get('IPInfoCache', 'jsonp');
